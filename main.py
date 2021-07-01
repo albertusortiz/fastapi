@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request
 
 import json
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse
 
 
 app = FastAPI()
@@ -30,6 +31,13 @@ async def agregar(request:Request):
     for id in datos:
         nuevos_datos[str(id)] = datos[id]
         i+=1
-    nuevos_datos[str(i)] = formdata["nuevolenguaje"]
-    sin_codificar = json.dumps(nuevos_datos)
-    return json.loads(sin_codificar)
+    datos[str(i)] = formdata["nuevolenguaje"]
+    sin_codificar = json.dumps(datos)
+    json.loads(sin_codificar)
+    return RedirectResponse("/",303)
+
+
+@app.get("/eliminar/{id}")
+async def eliminar(request:Request, id:str):
+    del datos[id]
+    return RedirectResponse("/",303)
