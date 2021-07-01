@@ -1,7 +1,11 @@
 from fastapi import FastAPI, Request
+
 import json
+from fastapi.templating import Jinja2Templates
+
 
 app = FastAPI()
+templates = Jinja2Templates(directory="templates")
 datos = {
     "1": "Python",
     "2": "Java",
@@ -10,10 +14,12 @@ datos = {
     "5": "C++"
 }
 
+
 @app.get("/")
-def raiz():
+def raiz(request:Request):
     sin_codificar = json.dumps(datos)
-    return json.loads(sin_codificar)
+    json_datos = json.loads(sin_codificar)
+    return templates.TemplateResponse("inicio.html", {"request":request,"listado":json_datos})
     
 
 @app.post("/agregar")
